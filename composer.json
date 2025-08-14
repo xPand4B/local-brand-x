@@ -10,13 +10,19 @@
     "license": "MIT",
     "require": {
         "php": "^8.2",
+        "ext-fileinfo": "*",
+        "ext-zip": "*",
         "laravel/framework": "^12.0",
-        "laravel/tinker": "^2.10.1"
+        "laravel/horizon": "^5.33",
+        "laravel/tinker": "^2.10.1",
+        "react/event-loop": "^1.5.0",
+        "react/filesystem": "^0.2@dev",
+        "spatie/image": "^3.8"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",
         "laravel/pail": "^1.2.2",
-        "laravel/pint": "^1.13",
+        "laravel/pint": "^1.24",
         "laravel/sail": "^1.41",
         "mockery/mockery": "^1.6",
         "nunomaduro/collision": "^8.6",
@@ -59,6 +65,26 @@
         "test": [
             "@php artisan config:clear --ansi",
             "@php artisan test"
+        ],
+        "fix": [
+            "./vendor/bin/pint --config pint.json"
+        ],
+        "fix:dry": [
+            "./vendor/bin/pint --test --config pint.json"
+        ],
+        "app:setup": [
+            "@composer install --no-interaction --optimize-autoloader",
+            "@php artisan migrate",
+            "@php artisan key:generate --ansi",
+            "@app:clear"
+        ],
+        "app:clear": [
+            "@php artisan cache:clear",
+            "@php artisan queue:clear",
+            "@php artisan route:clear",
+            "@php artisan optimize:clear",
+            "@php artisan horizon:clear",
+            "@php artisan horizon:clear-metrics"
         ]
     },
     "extra": {
@@ -72,7 +98,8 @@
         "sort-packages": true,
         "allow-plugins": {
             "pestphp/pest-plugin": true,
-            "php-http/discovery": true
+            "php-http/discovery": true,
+            "wyrihaximus/composer-update-bin-autoload-path": false
         }
     },
     "minimum-stability": "stable",
